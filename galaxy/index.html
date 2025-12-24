@@ -20,7 +20,7 @@
         .view.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* CENTERED LANDING PAGE - CENTERED */
+        /* LANDING PAGE - CENTERED */
         #view-landing { justify-content: center; text-align: center; padding-top: 0; }
         .hero-img-container { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); padding: 5px; box-shadow: 0 0 20px var(--accent); margin: 0 auto 20px; }
         .hero-img-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -70,7 +70,7 @@
 <body data-theme="dark">
 
 <div class="nav">
-    <div style="font-family:'Syncopate'; font-size:0.7rem; color:var(--accent);">GALAXY 💈</div>
+    <div style="font-family:'Syncopate'; font-size:0.7rem; color:var(--accent);">GALAXY</div>
     <div style="display:flex; gap:10px;">
         <div class="circle-btn" onclick="toggleTheme()">🌓</div>
         <div class="circle-btn" onclick="openAdminLogin()">👤</div>
@@ -87,7 +87,7 @@
 </div>
 
 <div id="view-selection" class="view">
-    <span class="label" id="lbl-barber">✂️ SELECT SPECIALIST</span>
+    <span class="label" id="lbl-barber">SELECT SPECIALIST</span>
     <div class="barber-grid">
         <div class="barber-card" onclick="selectItem('barber', 'Yogesh Wagh', this)">
             <img src="images/y.jpg"><b id="nm-yogesh">YOGESH WAGH</b>
@@ -96,28 +96,28 @@
             <img src="images/r.jpg"><b id="nm-raju">RAJU WAGH</b>
         </div>
     </div>
-    <span class="label" id="lbl-gender" style="margin-top:20px;">👤 CATEGORY</span>
+    <span class="label" id="lbl-gender" style="margin-top:20px;">CATEGORY</span>
     <div class="gender-grid">
         <div class="gender-card" id="gen-male" onclick="selectItem('gender', 'Male', this)">🤵 <span id="txt-male">MALE</span></div>
         <div class="gender-card" id="gen-female" onclick="selectItem('gender', 'Female', this)">💃 <span id="txt-female">FEMALE</span></div>
     </div>
-    <button class="btn-magma" id="next-btn" disabled onclick="showView('view-booking')">CONTINUE ➔</button>
+    <button class="btn-magma" id="next-btn" disabled onclick="showView('view-booking')" style="margin-top:35px;">CONTINUE</button>
 </div>
 
 <div id="view-booking" class="view">
-    <div id="admin-banner" style="display:none; color:red; font-size:0.6rem; font-weight:800; margin-bottom:10px;">⚠️ ADMIN: <span id="logged-barber"></span></div>
+    <div id="admin-banner" style="display:none; color:red; font-size:0.6rem; font-weight:800; margin-bottom:10px;">ADMIN: <span id="logged-barber"></span></div>
     <div class="module">
-        <span class="label" id="lbl-services">🛠️ SERVICES</span>
+        <span class="label" id="lbl-services">SERVICES</span>
         <div id="service-container"></div>
         <div onclick="toggleAllS()" id="view-all-btn" style="text-align:center; font-size:0.55rem; color:var(--accent); font-weight:700; margin-top:10px; cursor:pointer;">VIEW ALL ▼</div>
     </div>
     <div class="module">
-        <div class="label"><span id="lbl-cal">📅 CALENDAR</span> <span onclick="document.getElementById('hidden-picker').showPicker()" style="cursor:pointer">📅</span></div>
+        <div class="label"><span id="lbl-cal">CALENDAR</span> <span onclick="document.getElementById('hidden-picker').showPicker()" style="cursor:pointer">📅</span></div>
         <input type="date" id="hidden-picker" style="position:absolute; opacity:0; pointer-events:none;" onchange="manualDate(this.value)">
         <div class="scroll-x" id="date-ribbon"></div>
     </div>
     <div class="module">
-        <span class="label" id="lbl-timing">⏰ TIMING GROUPS</span>
+        <span class="label" id="lbl-timing">TIMING GROUPS</span>
         <div class="time-pill" onclick="togglePill(this)"><span id="p-morning">Morning</span> <span>▼</span></div>
         <div id="morning-grid" class="sub-grid"></div>
         <div class="time-pill" onclick="togglePill(this)"><span id="p-afternoon">Afternoon</span> <span>▼</span></div>
@@ -125,34 +125,38 @@
         <div class="time-pill" onclick="togglePill(this)"><span id="p-evening">Evening</span> <span>▼</span></div>
         <div id="evening-grid" class="sub-grid"></div>
     </div>
-    <button class="btn-magma" id="book-btn" disabled onclick="openActionModal()">BOOK NOW 📅</button>
+    <button class="btn-magma" id="book-btn" disabled onclick="openActionModal()">BOOK NOW</button>
 </div>
 
 <div id="details-modal" class="modal">
     <div class="modal-box">
-        <h3 id="lbl-details">📝 Details</h3>
+        <h3 id="lbl-details">Booking Details</h3>
         <input type="text" id="cust-name" placeholder="Client Name">
-        <input type="tel" id="cust-phone" placeholder="10 Digit Number" maxlength="10">
-        <button class="btn-magma" onclick="finalize()">CONFIRM ✅</button>
+        <input type="tel" id="cust-phone" placeholder="WhatsApp Number" maxlength="10">
+        <button class="btn-magma" onclick="finalize()">CONFIRM</button>
         <button onclick="closeModal('details-modal')" style="background:none; border:none; color:red; margin-top:15px; width:100%;">Cancel</button>
     </div>
 </div>
 
-<div id="admin-modal" class="modal"><div class="modal-box"><h3>🔐 Login</h3><input type="password" id="admin-pin" placeholder="PIN"><button class="btn-magma" onclick="adminLogin()">LOG IN ➔</button></div></div>
+<div id="admin-modal" class="modal">
+    <div class="modal-box">
+        <input type="password" id="admin-pin" placeholder="Barber PIN">
+        <button class="btn-magma" onclick="adminLogin()">LOG IN</button>
+    </div>
+</div>
 
 <div id="edit-modal" class="modal">
     <div class="modal-box">
-        <h4 id="edit-client-name" style="margin-top:0">⚙️ Manage</h4>
-        <label style="font-size:0.6rem;">📅 CHANGE DATE</label><input type="date" id="edit-date">
-        <label style="font-size:0.6rem;">⏰ CHANGE TIME</label><select id="edit-time-select"></select>
-        <button class="btn-magma" onclick="saveEdit()">SAVE 💾</button>
-        <button class="btn-magma" style="background:red; color:white; margin-top:10px;" onclick="deleteBooking()">CANCEL 🗑️</button>
+        <h4 id="edit-client-name" style="margin-top:0">Manage</h4>
+        <label style="font-size:0.6rem;">CHANGE DATE</label><input type="date" id="edit-date">
+        <label style="font-size:0.6rem;">CHANGE TIME</label><select id="edit-time-select"></select>
+        <button class="btn-magma" onclick="saveEdit()">SAVE CHANGES</button>
+        <button class="btn-magma" style="background:red; color:white; margin-top:10px;" onclick="deleteBooking()">CANCEL BOOKING</button>
         <button onclick="closeModal('edit-modal')" style="background:none; border:none; width:100%; margin-top:15px;">Close</button>
     </div>
 </div>
 
 <script>
-    // --- FIREBASE LIVE CONFIG ---
     const firebaseConfig = { databaseURL: "https://ankit-aeb2c-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const dbRef = firebase.database().ref('bookings');
@@ -163,8 +167,8 @@
     const pins = {"1111":"Yogesh Wagh", "2222":"Raju Wagh"};
 
     const dict = {
-        hi: { b:"✂️ विशेषज्ञ चुनें", yogesh:"योगेश वाघ", raju:"राजू वाघ", g:"👤 ग्राहक श्रेणी", male:"पुरुष", female:"महिला", s:"🛠️ सेवाएं", m:"सुबह", a:"दोपहर", e:"शाम", next:"जारी रखें ➔", book:"अभी बुक करें 📅", det:"📝 विवरण", cal:"📅 कैलेंडर" },
-        en: { b:"✂️ SELECT SPECIALIST", yogesh:"YOGESH WAGH", raju:"RAJU WAGH", g:"👤 CATEGORY", male:"MALE", female:"FEMALE", s:"🛠️ SERVICES", m:"Morning", a:"Afternoon", e:"Evening", next:"CONTINUE ➔", book:"BOOK NOW 📅", det:"📝 Details", cal:"📅 CALENDAR" }
+        hi: { b:"विशेषज्ञ चुनें", yogesh:"योगेश वाघ", raju:"राजू वाघ", g:"ग्राहक श्रेणी", male:"पुरुष", female:"महिला", s:"सेवाएं", m:"सुबह", a:"दोपहर", e:"शाम", next:"जारी रखें", book:"अभी बुक करें", det:"विवरण", cal:"कैलेंडर" },
+        en: { b:"SELECT SPECIALIST", yogesh:"YOGESH WAGH", raju:"RAJU WAGH", g:"CATEGORY", male:"MALE", female:"FEMALE", s:"SERVICES", m:"Morning", a:"Afternoon", e:"Evening", next:"CONTINUE", book:"BOOK NOW", det:"Details", cal:"CALENDAR" }
     };
 
     const servicesList = [
@@ -174,7 +178,6 @@
         {id:'Color', en:'Color', hi:'कलर'}, {id:'Marriage', en:'Marriage', hi:'शादी'}
     ];
 
-    // FETCH FROM FIREBASE
     dbRef.on('value', (snap) => {
         const val = snap.val();
         db = val ? Object.keys(val).map(key => ({ ...val[key], firebaseKey: key })) : [];
@@ -232,7 +235,11 @@
         renderTimes();
     }
 
-    function togglePill(el) { const target = el.nextElementSibling; const isOpen = target.classList.contains('active'); document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active')); if(!isOpen) target.classList.add('active'); }
+    function togglePill(el) {
+        const target = el.nextElementSibling; const isOpen = target.classList.contains('active');
+        document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active'));
+        if(!isOpen) target.classList.add('active');
+    }
 
     function renderTimes() { renderG('morning-grid', [9,10,11]); renderG('afternoon-grid', [12,13,14,15,16]); renderG('evening-grid', [17,18,19,20,21]); }
     function renderG(id, hrs) {
@@ -249,7 +256,7 @@
         if(booking && state.isAdmin) {
             state.activeBookingId = booking.id;
             state.activeFirebaseKey = booking.firebaseKey;
-            document.getElementById('edit-client-name').innerText = "⚙️ " + booking.name;
+            document.getElementById('edit-client-name').innerText = booking.name;
             document.getElementById('edit-date').value = booking.date;
             const sel = document.getElementById('edit-time-select'); sel.innerHTML = '';
             for(let i=9; i<=21; i++) ['00','30'].forEach(m => { let v = `${i}:${m}`; sel.innerHTML += `<option value="${v}" ${v===booking.time?'selected':''}>${v}</option>`; });
@@ -262,11 +269,10 @@
     function openActionModal() { document.getElementById('details-modal').classList.add('active'); }
 
     function finalize() {
-        const n = document.getElementById('cust-name').value; const p = document.getElementById('cust-phone').value;
-        if(!n || p.length < 10) return alert(state.lang==='hi' ? "कृपया सही नाम और 10 अंकों का नंबर भरें" : "Enter valid name and 10-digit number");
+        const n = document.getElementById('cust-name').value;
+        if(!n) return alert("Name Required");
         const bN = state.isAdmin ? state.loggedBarber : state.barber;
-        dbRef.push({id:Date.now(), name:n, phone:p, barber:bN, date:state.date, time:state.time, services:state.services});
-        if(!state.isAdmin) window.open(`https://wa.me/${WA}?text=GALAXY BOOKING: ${n} | ${bN} | ${state.date} @ ${state.time}`);
+        dbRef.push({id:Date.now(), name:n, barber:bN, date:state.date, time:state.time, services:state.services});
         location.reload();
     }
 
@@ -282,10 +288,7 @@
         }
     }
     function saveEdit() {
-        dbRef.child(state.activeFirebaseKey).update({ 
-            date: document.getElementById('edit-date').value, 
-            time: document.getElementById('edit-time-select').value 
-        });
+        dbRef.child(state.activeFirebaseKey).update({ date: document.getElementById('edit-date').value, time: document.getElementById('edit-time-select').value });
         location.reload();
     }
     function deleteBooking() { if(confirm("Cancel?")) { dbRef.child(state.activeFirebaseKey).remove(); location.reload(); } }
