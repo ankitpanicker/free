@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GALAXY SALOON | Full Admin Sync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hindi:wght@400;700&family=Syncopate:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #ff8c00; --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-dim: #64748b; --border: rgba(0, 0, 0, 0.08); }
+        [data-theme="dark"] { --bg: #020617; --surface: #0f172a; --text: #f8fafc; --text-dim: #94a3b8; --border: rgba(255, 255, 255, 0.1); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background 0.3s; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Noto Sans Hindi', sans-serif; margin: 0; height: 100vh; overflow: hidden; }
+        .nav { position: fixed; top: 0; width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: var(--bg); }
+        .circle-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .view { display: none; height: 100vh; padding: 70px 15px 20px; flex-direction: column; overflow-y: auto; align-items: center; }
+        .view.active { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* LANDING PAGE - CENTERED */
+        #view-landing { justify-content: center; text-align: center; padding-top: 0; }
+        .hero-img-container { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); padding: 5px; box-shadow: 0 0 20px var(--accent); margin: 0 auto 20px; }
+        .hero-img-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+        /* CARDS */
+        .barber-grid, .gender-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 400px; }
+        .barber-card, .gender-card { background: var(--surface); border-radius: 24px; padding: 20px; text-align: center; border: 2.5px solid transparent; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .barber-card img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 2px solid var(--border); }
+        .active-card { border-color: var(--accent) !important; background: rgba(255, 140, 0, 0.05) !important; }
+
+        /* SQUARE SERVICE GRID */
+        .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%; }
+        .s-card { aspect-ratio: 1/1; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px; cursor: pointer; }
+        .s-card.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .s-card b { font-size: 0.5rem; text-transform: uppercase; margin-top: 4px; text-align: center; }
+        .hidden-s { display: none; }
+
+        /* ADMIN PILL GRID */
+        .admin-service-pills { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+        .s-pill { padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.6rem; background: var(--surface); cursor: pointer; }
+        .s-pill.active { background: var(--accent); color: #000; }
+
+        /* DROPDOWN PILLS TIMING */
+        .module { background: var(--surface); border-radius: 20px; padding: 12px; width: 100%; border: 1px solid var(--border); margin-bottom: 10px; }
+        .label { font-size: 0.65rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .time-pill { background: var(--bg); border: 1px solid var(--border); border-radius: 30px; padding: 12px 18px; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; }
+        .sub-grid { display: none; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px 0; }
+        .sub-grid.active { display: grid; }
+        .t-chip { padding: 10px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-align: center; font-size: 0.6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .t-chip.selected { border-color: var(--accent); color: var(--accent); background: rgba(255, 140, 0, 0.1); }
+        .booked { opacity: 0.3; text-decoration: line-through; pointer-events: none; }
+        .admin-booked { background: #fee2e2 !important; color: #b91c1c !important; opacity: 1 !important; border-color: #fca5a5 !important; font-weight: bold; text-decoration: none !important; cursor: pointer !important; }
+
+        /* GENERAL UI */
+        .btn-magma { width: 100%; max-width: 320px; padding: 18px; border-radius: 18px; border: none; background: var(--accent); color: #000; font-weight: 700; cursor: pointer; }
+        .scroll-x { display: flex; overflow-x: auto; gap: 8px; width: 100%; scrollbar-width: none; }
+        .date-chip { min-width: 50px; height: 65px; border-radius: 15px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+        .date-chip.active { background: var(--accent); color: #000; }
+
+        /* MODALS */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .modal.active { display: flex; }
+        .modal-box { width: 100%; max-width: 360px; background: var(--surface); padding: 30px; border-radius: 25px; }
+        input, select { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 15px; border-radius: 10px; color: var(--text); margin-bottom: 15px; font-family: inherit; }
+    </style>
+</head>
+<body data-theme="dark">
+
+<div class="nav">
+    <div style="font-family:'Syncopate'; font-size:0.7rem; color:var(--accent);">GALAXY</div>
+    <div style="display:flex; gap:10px;">
+        <div class="circle-btn" onclick="toggleTheme()">🌓</div>
+        <div class="circle-btn" onclick="openAdminModal()">👤</div>
+    </div>
+</div>
+
+<div id="view-landing" class="view active">
+    <div class="hero-img-container"><img src="images/g.jpg"></div>
+    <h1 style="font-family:'Syncopate'; font-size:1.1rem; letter-spacing:4px; color:var(--accent);">GALAXY SALOON</h1>
+    <div style="display:flex; gap:12px; margin-top:25px; width: 100%; justify-content: center;">
+        <button class="btn-magma" style="max-width: 130px;" onclick="setLang('en')">ENGLISH</button>
+        <button class="btn-magma" style="background:#444; color:white; font-family:'Noto Sans Hindi'; max-width: 130px;" onclick="setLang('hi')">हिंदी</button>
+    </div>
+</div>
+
+<div id="view-selection" class="view">
+    <span class="label" id="lbl-barber">SELECT SPECIALIST</span>
+    <div class="barber-grid">
+        <div class="barber-card" onclick="selectItem('barber', 'Yogesh Wagh', this)">
+            <img src="images/y.jpg"><b id="nm-yogesh">YOGESH WAGH</b>
+        </div>
+        <div class="barber-card" onclick="selectItem('barber', 'Raju Wagh', this)">
+            <img src="images/r.jpg"><b id="nm-raju">RAJU WAGH</b>
+        </div>
+    </div>
+    <span class="label" id="lbl-gender" style="margin-top:20px;">CATEGORY</span>
+    <div class="gender-grid">
+        <div class="gender-card" id="gen-male" onclick="selectItem('gender', 'Male', this)">🤵 <span id="txt-male">MALE</span></div>
+        <div class="gender-card" id="gen-female" onclick="selectItem('gender', 'Female', this)">💃 <span id="txt-female">FEMALE</span></div>
+    </div>
+    <button class="btn-magma" id="next-btn" disabled onclick="showView('view-booking')" style="margin-top:35px;">CONTINUE</button>
+</div>
+
+<div id="view-booking" class="view">
+    <div id="admin-banner" style="display:none; color:red; font-size:0.7rem; font-weight:800; margin-bottom:10px;">ADMIN: <span id="logged-barber"></span></div>
+    <div class="module">
+        <span class="label" id="lbl-services">SERVICES</span>
+        <div id="service-container"></div>
+        <div onclick="toggleAllS()" id="view-all-btn" style="text-align:center; font-size:0.55rem; color:var(--accent); font-weight:700; margin-top:10px; cursor:pointer;">VIEW ALL ▼</div>
+    </div>
+    <div class="module">
+        <div class="label"><span id="lbl-cal">CALENDAR</span> <span onclick="document.getElementById('hidden-picker').showPicker()" style="cursor:pointer">📅</span></div>
+        <input type="date" id="hidden-picker" style="position:absolute; opacity:0; pointer-events:none;" onchange="manualDate(this.value)">
+        <div class="scroll-x" id="date-ribbon"></div>
+    </div>
+    <div class="module">
+        <span class="label" id="lbl-timing">TIMING GROUPS</span>
+        <div class="time-pill" onclick="togglePill(this)"><span id="p-morning">Morning</span> <span>▼</span></div>
+        <div id="morning-grid" class="sub-grid"></div>
+        <div class="time-pill" onclick="togglePill(this)"><span id="p-afternoon">Afternoon</span> <span>▼</span></div>
+        <div id="afternoon-grid" class="sub-grid"></div>
+        <div class="time-pill" onclick="togglePill(this)"><span id="p-evening">Evening</span> <span>▼</span></div>
+        <div id="evening-grid" class="sub-grid"></div>
+    </div>
+    <button class="btn-magma" id="book-btn" disabled onclick="openActionModal()">BOOK NOW</button>
+</div>
+
+<div id="details-modal" class="modal">
+    <div class="modal-box">
+        <h3 id="lbl-details">Booking Details</h3>
+        <input type="text" id="cust-name" placeholder="Client Name">
+        <input type="tel" id="cust-phone" placeholder="WhatsApp Number" maxlength="10">
+        <button class="btn-magma" onclick="finalize()">CONFIRM</button>
+        <button onclick="closeModal('details-modal')" style="background:none; border:none; color:red; margin-top:15px; width:100%;">Cancel</button>
+    </div>
+</div>
+
+<div id="admin-modal" class="modal">
+    <div class="modal-box">
+        <input type="password" id="admin-pin" placeholder="Barber PIN">
+        <button class="btn-magma" onclick="adminLogin()">LOG IN</button>
+    </div>
+</div>
+
+<div id="edit-modal" class="modal">
+    <div class="modal-box">
+        <h4 id="edit-client-name" style="margin-top:0">Manage</h4>
+        <label style="font-size:0.6rem;">CHANGE DATE</label><input type="date" id="edit-date">
+        <label style="font-size:0.6rem;">CHANGE TIME</label><select id="edit-time-select"></select>
+        <button class="btn-magma" onclick="saveEdit()">SAVE CHANGES</button>
+        <button class="btn-magma" style="background:red; color:white; margin-top:10px;" onclick="deleteBooking()">CANCEL BOOKING</button>
+        <button onclick="closeModal('edit-modal')" style="background:none; border:none; width:100%; margin-top:15px;">Close</button>
+    </div>
+</div>
+
+<script>
+    const WA = "911234567890";
+    let db = JSON.parse(localStorage.getItem('galaxy_final_v100') || '[]');
+    let state = { lang:'en', isAdmin:false, loggedBarber:'', barber:'', gender:'', services:[], date:new Date().toISOString().split('T')[0], time:null, activeBookingId: null, showAll: false };
+    const pins = {"1111":"Yogesh Wagh", "2222":"Raju Wagh"};
+
+    const dict = {
+        hi: { b:"विशेषज्ञ चुनें", yogesh:"योगेश वाघ", raju:"राजू वाघ", g:"ग्राहक श्रेणी", male:"पुरुष", female:"महिला", s:"सेवाएं", m:"सुबह", a:"दोपहर", e:"शाम", next:"जारी रखें", book:"अभी बुक करें", det:"विवरण", cal:"कैलेंडर" },
+        en: { b:"SELECT SPECIALIST", yogesh:"YOGESH WAGH", raju:"RAJU WAGH", g:"CATEGORY", male:"MALE", female:"FEMALE", s:"SERVICES", m:"Morning", a:"Afternoon", e:"Evening", next:"CONTINUE", book:"BOOK NOW", det:"Details", cal:"CALENDAR" }
+    };
+
+    function setLang(l) {
+        state.lang = l; const d = dict[l];
+        document.getElementById('lbl-barber').innerText = d.b; document.getElementById('nm-yogesh').innerText = d.yogesh; document.getElementById('nm-raju').innerText = d.raju;
+        document.getElementById('lbl-gender').innerText = d.g; document.getElementById('txt-male').innerText = d.male; document.getElementById('txt-female').innerText = d.female;
+        document.getElementById('lbl-services').innerText = d.s; document.getElementById('p-morning').innerText = d.m; document.getElementById('p-afternoon').innerText = d.a;
+        document.getElementById('p-evening').innerText = d.e; document.getElementById('next-btn').innerText = d.next; document.getElementById('book-btn').innerText = d.book;
+        document.getElementById('lbl-details').innerText = d.det; document.getElementById('lbl-cal').innerText = d.cal;
+        showView('view-selection');
+    }
+
+    function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
+    function showView(v) { document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById(v).classList.add('active'); if(v==='view-booking') initBooking(); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function selectItem(type, val, el) {
+        state[type] = val; el.parentElement.querySelectorAll('div').forEach(x=>x.classList.remove('active-card')); el.classList.add('active-card');
+        if(state.barber && state.gender) document.getElementById('next-btn').disabled = false;
+    }
+
+    function toggleS(s, el) {
+        if(state.services.includes(s)) state.services = state.services.filter(x=>x!==s); else state.services.push(s);
+        el.classList.toggle('active'); validate();
+    }
+
+    function renderServices() {
+        const container = document.getElementById('service-container');
+        const list = ["Cutting", "Shaving", "Wax", "Facial", "Threading", "Treatment", "Color", "Marriage"];
+        if(state.isAdmin) {
+            container.className = "admin-service-pills";
+            container.innerHTML = list.map(s => `<div class="s-pill ${state.services.includes(s)?'active':''}" onclick="toggleS('${s}', this)">${s}</div>`).join('');
+            document.getElementById('view-all-btn').style.display = 'none';
+        } else {
+            container.className = "service-grid";
+            container.innerHTML = list.map((s, i) => `<div class="s-card ${state.services.includes(s)?'active':''} ${i>3 && !state.showAll ? 'hidden-s' : ''}" onclick="toggleS('${s}', this)"><b>${s}</b></div>`).join('');
+            document.getElementById('view-all-btn').style.display = 'block';
+        }
+    }
+
+    function initBooking() {
+        renderServices();
+        const rib = document.getElementById('date-ribbon'); rib.innerHTML = '';
+        let start = new Date(state.date);
+        for(let i=0; i<14; i++) {
+            let d = new Date(start); d.setDate(d.getDate() + i); let iso = d.toISOString().split('T')[0];
+            let item = document.createElement('div');
+            item.className = `date-chip ${iso === state.date ? 'active' : ''}`;
+            item.innerHTML = `<small>${d.toLocaleDateString('en-US',{weekday:'short'})}</small><b>${d.getDate()}</b>`;
+            item.onclick = () => { state.date = iso; initBooking(); };
+            rib.appendChild(item);
+        }
+        renderTimes();
+    }
+
+    function togglePill(el) {
+        const target = el.nextElementSibling; const isOpen = target.classList.contains('active');
+        document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active'));
+        if(!isOpen) target.classList.add('active');
+    }
+
+    function renderTimes() { renderG('morning-grid', [9,10,11]); renderG('afternoon-grid', [12,13,14,15,16]); renderG('evening-grid', [17,18,19,20,21]); }
+    function renderG(id, hrs) {
+        const grid = document.getElementById(id); const curB = state.isAdmin ? state.loggedBarber : state.barber;
+        grid.innerHTML = hrs.flatMap(h => ['00', '30'].map(m => {
+            const t = `${h}:${m}`; const b = db.find(x => x.date === state.date && x.time === t && x.barber === curB);
+            let cls = state.time === t ? 'selected' : ''; let lbl = t;
+            if(b) { cls = state.isAdmin ? 'admin-booked' : 'booked'; lbl = state.isAdmin ? b.name : 'X'; }
+            return `<div class="t-chip ${cls}" onclick="handleChip('${t}', ${b ? b.id : null})">${lbl}</div>`;
+        })).join('');
+    }
+
+    function handleChip(t, bid) {
+        if(bid && state.isAdmin) {
+            state.activeBookingId = bid; const b = db.find(x=>x.id===bid);
+            document.getElementById('edit-client-name').innerText = b.name;
+            document.getElementById('edit-date').value = b.date;
+            const sel = document.getElementById('edit-time-select'); sel.innerHTML = '';
+            for(let i=9; i<=21; i++) ['00','30'].forEach(m => { let v = `${i}:${m}`; sel.innerHTML += `<option value="${v}" ${v===b.time?'selected':''}>${v}</option>`; });
+            document.getElementById('edit-modal').classList.add('active');
+        } else if(!bid) { state.time = t; renderTimes(); validate(); }
+    }
+
+    function manualDate(v) { state.date = v; initBooking(); }
+    function validate() { document.getElementById('book-btn').disabled = !state.time; }
+    function openActionModal() { document.getElementById('details-modal').classList.add('active'); }
+
+    function finalize() {
+        const n = document.getElementById('cust-name').value;
+        if(!n) return alert("Name Required");
+        const bN = state.isAdmin ? state.loggedBarber : state.barber;
+        db.push({id:Date.now(), name:n, barber:bN, date:state.date, time:state.time, services:state.services});
+        localStorage.setItem('galaxy_final_v100', JSON.stringify(db));
+        if(!state.isAdmin) window.open(`https://wa.me/${WA}?text=Booking: ${n} | ${bN} | ${state.date} @ ${state.time}`);
+        location.reload();
+    }
+
+    function adminLogin() {
+        const p = document.getElementById('admin-pin').value;
+        if(pins[p]) {
+            state.isAdmin = true; state.loggedBarber = pins[p];
+            document.getElementById('admin-modal').classList.remove('active');
+            document.getElementById('admin-banner').style.display = 'block';
+            document.getElementById('logged-barber').innerText = pins[p];
+            showView('view-booking');
+        }
+    }
+    function saveEdit() {
+        const b = db.find(x => x.id === state.activeBookingId); b.date = document.getElementById('edit-date').value; b.time = document.getElementById('edit-time-select').value;
+        localStorage.setItem('galaxy_final_v100', JSON.stringify(db)); location.reload();
+    }
+    function deleteBooking() { if(confirm("Cancel?")) { db = db.filter(x => x.id !== state.activeBookingId); localStorage.setItem('galaxy_final_v100', JSON.stringify(db)); location.reload(); } }
+    function toggleAllS() { state.showAll = !state.showAll; initBooking(); }
+    function openAdminModal() { document.getElementById('admin-modal').classList.add('active'); }
+</script>
+</body>
+</html>
