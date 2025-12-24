@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>GALAXY SALOON | Full Admin Sync</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hindi:wght@400;700&family=Syncopate:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
         :root { --accent: #ff8c00; --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-dim: #64748b; --border: rgba(0, 0, 0, 0.08); }
         [data-theme="dark"] { --bg: #020617; --surface: #0f172a; --text: #f8fafc; --text-dim: #94a3b8; --border: rgba(255, 255, 255, 0.1); }
@@ -16,7 +20,7 @@
         .view.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* LANDING PAGE - CENTERED */
+        /* CENTERED LANDING PAGE - CENTERED */
         #view-landing { justify-content: center; text-align: center; padding-top: 0; }
         .hero-img-container { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); padding: 5px; box-shadow: 0 0 20px var(--accent); margin: 0 auto 20px; }
         .hero-img-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -66,10 +70,10 @@
 <body data-theme="dark">
 
 <div class="nav">
-    <div style="font-family:'Syncopate'; font-size:0.7rem; color:var(--accent);">GALAXY</div>
+    <div style="font-family:'Syncopate'; font-size:0.7rem; color:var(--accent);">GALAXY 💈</div>
     <div style="display:flex; gap:10px;">
         <div class="circle-btn" onclick="toggleTheme()">🌓</div>
-        <div class="circle-btn" onclick="openAdminModal()">👤</div>
+        <div class="circle-btn" onclick="openAdminLogin()">👤</div>
     </div>
 </div>
 
@@ -78,12 +82,12 @@
     <h1 style="font-family:'Syncopate'; font-size:1.1rem; letter-spacing:4px; color:var(--accent);">GALAXY SALOON</h1>
     <div style="display:flex; gap:12px; margin-top:25px; width: 100%; justify-content: center;">
         <button class="btn-magma" style="max-width: 130px;" onclick="setLang('en')">ENGLISH</button>
-        <button class="btn-magma" style="background:#444; color:white; font-family:'Noto Sans Hindi'; max-width: 130px;" onclick="setLang('hi')">हिंदी</button>
+        <button class="btn-magma" style="background:#444; color:white; font-family:'Noto Sans Hindi'; max-width: 140px;" onclick="setLang('hi')">हिंदी</button>
     </div>
 </div>
 
 <div id="view-selection" class="view">
-    <span class="label" id="lbl-barber">SELECT SPECIALIST</span>
+    <span class="label" id="lbl-barber">✂️ SELECT SPECIALIST</span>
     <div class="barber-grid">
         <div class="barber-card" onclick="selectItem('barber', 'Yogesh Wagh', this)">
             <img src="images/y.jpg"><b id="nm-yogesh">YOGESH WAGH</b>
@@ -92,28 +96,28 @@
             <img src="images/r.jpg"><b id="nm-raju">RAJU WAGH</b>
         </div>
     </div>
-    <span class="label" id="lbl-gender" style="margin-top:20px;">CATEGORY</span>
+    <span class="label" id="lbl-gender" style="margin-top:20px;">👤 CATEGORY</span>
     <div class="gender-grid">
         <div class="gender-card" id="gen-male" onclick="selectItem('gender', 'Male', this)">🤵 <span id="txt-male">MALE</span></div>
         <div class="gender-card" id="gen-female" onclick="selectItem('gender', 'Female', this)">💃 <span id="txt-female">FEMALE</span></div>
     </div>
-    <button class="btn-magma" id="next-btn" disabled onclick="showView('view-booking')" style="margin-top:35px;">CONTINUE</button>
+    <button class="btn-magma" id="next-btn" disabled onclick="showView('view-booking')">CONTINUE ➔</button>
 </div>
 
 <div id="view-booking" class="view">
-    <div id="admin-banner" style="display:none; color:red; font-size:0.7rem; font-weight:800; margin-bottom:10px;">ADMIN: <span id="logged-barber"></span></div>
+    <div id="admin-banner" style="display:none; color:red; font-size:0.6rem; font-weight:800; margin-bottom:10px;">⚠️ ADMIN: <span id="logged-barber"></span></div>
     <div class="module">
-        <span class="label" id="lbl-services">SERVICES</span>
+        <span class="label" id="lbl-services">🛠️ SERVICES</span>
         <div id="service-container"></div>
         <div onclick="toggleAllS()" id="view-all-btn" style="text-align:center; font-size:0.55rem; color:var(--accent); font-weight:700; margin-top:10px; cursor:pointer;">VIEW ALL ▼</div>
     </div>
     <div class="module">
-        <div class="label"><span id="lbl-cal">CALENDAR</span> <span onclick="document.getElementById('hidden-picker').showPicker()" style="cursor:pointer">📅</span></div>
+        <div class="label"><span id="lbl-cal">📅 CALENDAR</span> <span onclick="document.getElementById('hidden-picker').showPicker()" style="cursor:pointer">📅</span></div>
         <input type="date" id="hidden-picker" style="position:absolute; opacity:0; pointer-events:none;" onchange="manualDate(this.value)">
         <div class="scroll-x" id="date-ribbon"></div>
     </div>
     <div class="module">
-        <span class="label" id="lbl-timing">TIMING GROUPS</span>
+        <span class="label" id="lbl-timing">⏰ TIMING GROUPS</span>
         <div class="time-pill" onclick="togglePill(this)"><span id="p-morning">Morning</span> <span>▼</span></div>
         <div id="morning-grid" class="sub-grid"></div>
         <div class="time-pill" onclick="togglePill(this)"><span id="p-afternoon">Afternoon</span> <span>▼</span></div>
@@ -121,47 +125,61 @@
         <div class="time-pill" onclick="togglePill(this)"><span id="p-evening">Evening</span> <span>▼</span></div>
         <div id="evening-grid" class="sub-grid"></div>
     </div>
-    <button class="btn-magma" id="book-btn" disabled onclick="openActionModal()">BOOK NOW</button>
+    <button class="btn-magma" id="book-btn" disabled onclick="openActionModal()">BOOK NOW 📅</button>
 </div>
 
 <div id="details-modal" class="modal">
     <div class="modal-box">
-        <h3 id="lbl-details">Booking Details</h3>
+        <h3 id="lbl-details">📝 Details</h3>
         <input type="text" id="cust-name" placeholder="Client Name">
-        <input type="tel" id="cust-phone" placeholder="WhatsApp Number" maxlength="10">
-        <button class="btn-magma" onclick="finalize()">CONFIRM</button>
+        <input type="tel" id="cust-phone" placeholder="10 Digit Number" maxlength="10">
+        <button class="btn-magma" onclick="finalize()">CONFIRM ✅</button>
         <button onclick="closeModal('details-modal')" style="background:none; border:none; color:red; margin-top:15px; width:100%;">Cancel</button>
     </div>
 </div>
 
-<div id="admin-modal" class="modal">
-    <div class="modal-box">
-        <input type="password" id="admin-pin" placeholder="Barber PIN">
-        <button class="btn-magma" onclick="adminLogin()">LOG IN</button>
-    </div>
-</div>
+<div id="admin-modal" class="modal"><div class="modal-box"><h3>🔐 Login</h3><input type="password" id="admin-pin" placeholder="PIN"><button class="btn-magma" onclick="adminLogin()">LOG IN ➔</button></div></div>
 
 <div id="edit-modal" class="modal">
     <div class="modal-box">
-        <h4 id="edit-client-name" style="margin-top:0">Manage</h4>
-        <label style="font-size:0.6rem;">CHANGE DATE</label><input type="date" id="edit-date">
-        <label style="font-size:0.6rem;">CHANGE TIME</label><select id="edit-time-select"></select>
-        <button class="btn-magma" onclick="saveEdit()">SAVE CHANGES</button>
-        <button class="btn-magma" style="background:red; color:white; margin-top:10px;" onclick="deleteBooking()">CANCEL BOOKING</button>
+        <h4 id="edit-client-name" style="margin-top:0">⚙️ Manage</h4>
+        <label style="font-size:0.6rem;">📅 CHANGE DATE</label><input type="date" id="edit-date">
+        <label style="font-size:0.6rem;">⏰ CHANGE TIME</label><select id="edit-time-select"></select>
+        <button class="btn-magma" onclick="saveEdit()">SAVE 💾</button>
+        <button class="btn-magma" style="background:red; color:white; margin-top:10px;" onclick="deleteBooking()">CANCEL 🗑️</button>
         <button onclick="closeModal('edit-modal')" style="background:none; border:none; width:100%; margin-top:15px;">Close</button>
     </div>
 </div>
 
 <script>
+    // --- FIREBASE LIVE CONFIG ---
+    const firebaseConfig = { databaseURL: "https://ankit-aeb2c-default-rtdb.firebaseio.com/" };
+    firebase.initializeApp(firebaseConfig);
+    const dbRef = firebase.database().ref('bookings');
+
     const WA = "919131934362";
-    let db = JSON.parse(localStorage.getItem('galaxy_final_v100') || '[]');
-    let state = { lang:'en', isAdmin:false, loggedBarber:'', barber:'', gender:'', services:[], date:new Date().toISOString().split('T')[0], time:null, activeBookingId: null, showAll: false };
+    let db = []; 
+    let state = { lang:'en', isAdmin:false, loggedBarber:'', barber:'', gender:'', services:[], date:new Date().toISOString().split('T')[0], time:null, activeBookingId: null, activeFirebaseKey: null, showAll: false };
     const pins = {"1111":"Yogesh Wagh", "2222":"Raju Wagh"};
 
     const dict = {
-        hi: { b:"विशेषज्ञ चुनें", yogesh:"योगेश वाघ", raju:"राजू वाघ", g:"ग्राहक श्रेणी", male:"पुरुष", female:"महिला", s:"सेवाएं", m:"सुबह", a:"दोपहर", e:"शाम", next:"जारी रखें", book:"अभी बुक करें", det:"विवरण", cal:"कैलेंडर" },
-        en: { b:"SELECT SPECIALIST", yogesh:"YOGESH WAGH", raju:"RAJU WAGH", g:"CATEGORY", male:"MALE", female:"FEMALE", s:"SERVICES", m:"Morning", a:"Afternoon", e:"Evening", next:"CONTINUE", book:"BOOK NOW", det:"Details", cal:"CALENDAR" }
+        hi: { b:"✂️ विशेषज्ञ चुनें", yogesh:"योगेश वाघ", raju:"राजू वाघ", g:"👤 ग्राहक श्रेणी", male:"पुरुष", female:"महिला", s:"🛠️ सेवाएं", m:"सुबह", a:"दोपहर", e:"शाम", next:"जारी रखें ➔", book:"अभी बुक करें 📅", det:"📝 विवरण", cal:"📅 कैलेंडर" },
+        en: { b:"✂️ SELECT SPECIALIST", yogesh:"YOGESH WAGH", raju:"RAJU WAGH", g:"👤 CATEGORY", male:"MALE", female:"FEMALE", s:"🛠️ SERVICES", m:"Morning", a:"Afternoon", e:"Evening", next:"CONTINUE ➔", book:"BOOK NOW 📅", det:"📝 Details", cal:"📅 CALENDAR" }
     };
+
+    const servicesList = [
+        {id:'Cutting', en:'Cutting', hi:'कटिंग'}, {id:'Shaving', en:'Shaving', hi:'शेविंग'},
+        {id:'Wax', en:'Waxing', hi:'वैक्सिंग'}, {id:'Facial', en:'Facial', hi:'फेशियल'},
+        {id:'Threading', en:'Threading', hi:'थ्रेडिंग'}, {id:'Treatment', en:'Treatment', hi:'ट्रीटमेंट'},
+        {id:'Color', en:'Color', hi:'कलर'}, {id:'Marriage', en:'Marriage', hi:'शादी'}
+    ];
+
+    // FETCH FROM FIREBASE
+    dbRef.on('value', (snap) => {
+        const val = snap.val();
+        db = val ? Object.keys(val).map(key => ({ ...val[key], firebaseKey: key })) : [];
+        if(document.getElementById('view-booking').classList.contains('active')) renderTimes();
+    });
 
     function setLang(l) {
         state.lang = l; const d = dict[l];
@@ -169,8 +187,7 @@
         document.getElementById('lbl-gender').innerText = d.g; document.getElementById('txt-male').innerText = d.male; document.getElementById('txt-female').innerText = d.female;
         document.getElementById('lbl-services').innerText = d.s; document.getElementById('p-morning').innerText = d.m; document.getElementById('p-afternoon').innerText = d.a;
         document.getElementById('p-evening').innerText = d.e; document.getElementById('next-btn').innerText = d.next; document.getElementById('book-btn').innerText = d.book;
-        document.getElementById('lbl-details').innerText = d.det; document.getElementById('lbl-cal').innerText = d.cal;
-        showView('view-selection');
+        document.getElementById('lbl-details').innerText = d.det; document.getElementById('lbl-cal').innerText = d.cal; showView('view-selection');
     }
 
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
@@ -182,21 +199,20 @@
         if(state.barber && state.gender) document.getElementById('next-btn').disabled = false;
     }
 
-    function toggleS(s, el) {
-        if(state.services.includes(s)) state.services = state.services.filter(x=>x!==s); else state.services.push(s);
+    function toggleS(id, el) {
+        if(state.services.includes(id)) state.services = state.services.filter(x=>x!==id); else state.services.push(id);
         el.classList.toggle('active'); validate();
     }
 
     function renderServices() {
         const container = document.getElementById('service-container');
-        const list = ["Cutting", "Shaving", "Wax", "Facial", "Threading", "Treatment", "Color", "Marriage"];
         if(state.isAdmin) {
             container.className = "admin-service-pills";
-            container.innerHTML = list.map(s => `<div class="s-pill ${state.services.includes(s)?'active':''}" onclick="toggleS('${s}', this)">${s}</div>`).join('');
+            container.innerHTML = servicesList.map(s => `<div class="s-pill ${state.services.includes(s.id)?'active':''}" onclick="toggleS('${s.id}', this)">${state.lang==='hi'?s.hi:s.en}</div>`).join('');
             document.getElementById('view-all-btn').style.display = 'none';
         } else {
             container.className = "service-grid";
-            container.innerHTML = list.map((s, i) => `<div class="s-card ${state.services.includes(s)?'active':''} ${i>3 && !state.showAll ? 'hidden-s' : ''}" onclick="toggleS('${s}', this)"><b>${s}</b></div>`).join('');
+            container.innerHTML = servicesList.map((s, i) => `<div class="s-card ${state.services.includes(s.id)?'active':''} ${i>3 && !state.showAll ? 'hidden-s' : ''}" onclick="toggleS('${s.id}', this)"><b>${state.lang==='hi'?s.hi:s.en}</b></div>`).join('');
             document.getElementById('view-all-btn').style.display = 'block';
         }
     }
@@ -205,22 +221,18 @@
         renderServices();
         const rib = document.getElementById('date-ribbon'); rib.innerHTML = '';
         let start = new Date(state.date);
-        for(let i=0; i<14; i++) {
+        for(let i=0; i<12; i++) {
             let d = new Date(start); d.setDate(d.getDate() + i); let iso = d.toISOString().split('T')[0];
             let item = document.createElement('div');
             item.className = `date-chip ${iso === state.date ? 'active' : ''}`;
             item.innerHTML = `<small>${d.toLocaleDateString('en-US',{weekday:'short'})}</small><b>${d.getDate()}</b>`;
-            item.onclick = () => { state.date = iso; initBooking(); };
+            item.onclick = () => { state.date = iso; state.time = null; initBooking(); validate(); };
             rib.appendChild(item);
         }
         renderTimes();
     }
 
-    function togglePill(el) {
-        const target = el.nextElementSibling; const isOpen = target.classList.contains('active');
-        document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active'));
-        if(!isOpen) target.classList.add('active');
-    }
+    function togglePill(el) { const target = el.nextElementSibling; const isOpen = target.classList.contains('active'); document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active')); if(!isOpen) target.classList.add('active'); }
 
     function renderTimes() { renderG('morning-grid', [9,10,11]); renderG('afternoon-grid', [12,13,14,15,16]); renderG('evening-grid', [17,18,19,20,21]); }
     function renderG(id, hrs) {
@@ -228,53 +240,56 @@
         grid.innerHTML = hrs.flatMap(h => ['00', '30'].map(m => {
             const t = `${h}:${m}`; const b = db.find(x => x.date === state.date && x.time === t && x.barber === curB);
             let cls = state.time === t ? 'selected' : ''; let lbl = t;
-            if(b) { cls = state.isAdmin ? 'admin-booked' : 'booked'; lbl = state.isAdmin ? b.name : 'X'; }
-            return `<div class="t-chip ${cls}" onclick="handleChip('${t}', ${b ? b.id : null})">${lbl}</div>`;
+            if(b) { cls = state.isAdmin ? 'admin-booked' : 'booked'; lbl = state.isAdmin ? b.name : '✖'; }
+            return `<div class="t-chip ${cls}" onclick="handleChip('${t}', ${b ? JSON.stringify(b) : null})">${lbl}</div>`;
         })).join('');
     }
 
-    function handleChip(t, bid) {
-        if(bid && state.isAdmin) {
-            state.activeBookingId = bid; const b = db.find(x=>x.id===bid);
-            document.getElementById('edit-client-name').innerText = b.name;
-            document.getElementById('edit-date').value = b.date;
+    function handleChip(t, booking) {
+        if(booking && state.isAdmin) {
+            state.activeBookingId = booking.id;
+            state.activeFirebaseKey = booking.firebaseKey;
+            document.getElementById('edit-client-name').innerText = "⚙️ " + booking.name;
+            document.getElementById('edit-date').value = booking.date;
             const sel = document.getElementById('edit-time-select'); sel.innerHTML = '';
-            for(let i=9; i<=21; i++) ['00','30'].forEach(m => { let v = `${i}:${m}`; sel.innerHTML += `<option value="${v}" ${v===b.time?'selected':''}>${v}</option>`; });
+            for(let i=9; i<=21; i++) ['00','30'].forEach(m => { let v = `${i}:${m}`; sel.innerHTML += `<option value="${v}" ${v===booking.time?'selected':''}>${v}</option>`; });
             document.getElementById('edit-modal').classList.add('active');
-        } else if(!bid) { state.time = t; renderTimes(); validate(); }
+        } else if(!booking) { state.time = t; renderTimes(); validate(); }
     }
 
-    function manualDate(v) { state.date = v; initBooking(); }
-    function validate() { document.getElementById('book-btn').disabled = !state.time; }
+    function manualDate(v) { state.date = v; state.time = null; initBooking(); validate(); }
+    function validate() { document.getElementById('book-btn').disabled = !(state.services.length && state.time); }
     function openActionModal() { document.getElementById('details-modal').classList.add('active'); }
 
     function finalize() {
-        const n = document.getElementById('cust-name').value;
-        if(!n) return alert("Name Required");
+        const n = document.getElementById('cust-name').value; const p = document.getElementById('cust-phone').value;
+        if(!n || p.length < 10) return alert(state.lang==='hi' ? "कृपया सही नाम और 10 अंकों का नंबर भरें" : "Enter valid name and 10-digit number");
         const bN = state.isAdmin ? state.loggedBarber : state.barber;
-        db.push({id:Date.now(), name:n, barber:bN, date:state.date, time:state.time, services:state.services});
-        localStorage.setItem('galaxy_final_v100', JSON.stringify(db));
-        if(!state.isAdmin) window.open(`https://wa.me/${WA}?text=Booking: ${n} | ${bN} | ${state.date} @ ${state.time}`);
+        dbRef.push({id:Date.now(), name:n, phone:p, barber:bN, date:state.date, time:state.time, services:state.services});
+        if(!state.isAdmin) window.open(`https://wa.me/${WA}?text=GALAXY BOOKING: ${n} | ${bN} | ${state.date} @ ${state.time}`);
         location.reload();
     }
 
+    function openAdminLogin() { document.getElementById('admin-modal').classList.add('active'); }
     function adminLogin() {
         const p = document.getElementById('admin-pin').value;
-        if(pins[p]) {
-            state.isAdmin = true; state.loggedBarber = pins[p];
-            document.getElementById('admin-modal').classList.remove('active');
-            document.getElementById('admin-banner').style.display = 'block';
-            document.getElementById('logged-barber').innerText = pins[p];
-            showView('view-booking');
+        if(pins[p]) { 
+            state.isAdmin = true; state.loggedBarber = pins[p]; 
+            document.getElementById('admin-modal').classList.remove('active'); 
+            document.getElementById('admin-banner').style.display = 'block'; 
+            document.getElementById('logged-barber').innerText = pins[p]; 
+            showView('view-booking'); 
         }
     }
     function saveEdit() {
-        const b = db.find(x => x.id === state.activeBookingId); b.date = document.getElementById('edit-date').value; b.time = document.getElementById('edit-time-select').value;
-        localStorage.setItem('galaxy_final_v100', JSON.stringify(db)); location.reload();
+        dbRef.child(state.activeFirebaseKey).update({ 
+            date: document.getElementById('edit-date').value, 
+            time: document.getElementById('edit-time-select').value 
+        });
+        location.reload();
     }
-    function deleteBooking() { if(confirm("Cancel?")) { db = db.filter(x => x.id !== state.activeBookingId); localStorage.setItem('galaxy_final_v100', JSON.stringify(db)); location.reload(); } }
-    function toggleAllS() { state.showAll = !state.showAll; initBooking(); }
-    function openAdminModal() { document.getElementById('admin-modal').classList.add('active'); }
+    function deleteBooking() { if(confirm("Cancel?")) { dbRef.child(state.activeFirebaseKey).remove(); location.reload(); } }
+    function toggleAllS() { state.showAll = !state.showAll; renderServices(); }
 </script>
 </body>
 </html>
