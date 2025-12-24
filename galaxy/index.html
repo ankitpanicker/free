@@ -82,7 +82,7 @@
     <h1 style="font-family:'Syncopate'; font-size:1.1rem; letter-spacing:4px; color:var(--accent);">GALAXY SALOON</h1>
     <div style="display:flex; gap:12px; margin-top:25px; width: 100%; justify-content: center;">
         <button class="btn-magma" style="max-width: 130px;" onclick="setLang('en')">ENGLISH</button>
-        <button class="btn-magma" style="background:#444; color:white; font-family:'Noto Sans Hindi'; max-width: 140px;" onclick="setLang('hi')">हिंदी</button>
+        <button class="btn-magma" style="background:#444; color:white; font-family:'Noto Sans Hindi'; max-width: 130px;" onclick="setLang('hi')">हिंदी</button>
     </div>
 </div>
 
@@ -163,7 +163,7 @@
 
     const WA = "919131934362";
     let db = []; 
-    let state = { lang:'en', isAdmin:false, loggedBarber:'', barber:'', gender:'', services:[], date:new Date().toISOString().split('T')[0], time:null, activeBookingId: null, activeFirebaseKey: null, showAll: false };
+    let state = { lang:'en', isAdmin:false, loggedBarber:'', barber:'', gender:'', services:[], date:new Date().toISOString().split('T')[0], time:null, activeFirebaseKey: null, showAll: false };
     const pins = {"1111":"Yogesh Wagh", "2222":"Raju Wagh"};
 
     const dict = {
@@ -235,11 +235,7 @@
         renderTimes();
     }
 
-    function togglePill(el) {
-        const target = el.nextElementSibling; const isOpen = target.classList.contains('active');
-        document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active'));
-        if(!isOpen) target.classList.add('active');
-    }
+    function togglePill(el) { const target = el.nextElementSibling; const isOpen = target.classList.contains('active'); document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active')); if(!isOpen) target.classList.add('active'); }
 
     function renderTimes() { renderG('morning-grid', [9,10,11]); renderG('afternoon-grid', [12,13,14,15,16]); renderG('evening-grid', [17,18,19,20,21]); }
     function renderG(id, hrs) {
@@ -247,16 +243,15 @@
         grid.innerHTML = hrs.flatMap(h => ['00', '30'].map(m => {
             const t = `${h}:${m}`; const b = db.find(x => x.date === state.date && x.time === t && x.barber === curB);
             let cls = state.time === t ? 'selected' : ''; let lbl = t;
-            if(b) { cls = state.isAdmin ? 'admin-booked' : 'booked'; lbl = state.isAdmin ? b.name : '✖'; }
-            return `<div class="t-chip ${cls}" onclick="handleChip('${t}', ${b ? JSON.stringify(b) : null})">${lbl}</div>`;
+            if(b) { cls = state.isAdmin ? 'admin-booked' : 'booked'; lbl = state.isAdmin ? b.name : 'X'; }
+            return `<div class="t-chip ${cls}" onclick='handleChip("${t}", ${b ? JSON.stringify(b) : "null"})'>${lbl}</div>`;
         })).join('');
     }
 
     function handleChip(t, booking) {
         if(booking && state.isAdmin) {
-            state.activeBookingId = booking.id;
             state.activeFirebaseKey = booking.firebaseKey;
-            document.getElementById('edit-client-name').innerText = booking.name;
+            document.getElementById('edit-client-name').innerText = "⚙️ " + booking.name;
             document.getElementById('edit-date').value = booking.date;
             const sel = document.getElementById('edit-time-select'); sel.innerHTML = '';
             for(let i=9; i<=21; i++) ['00','30'].forEach(m => { let v = `${i}:${m}`; sel.innerHTML += `<option value="${v}" ${v===booking.time?'selected':''}>${v}</option>`; });
